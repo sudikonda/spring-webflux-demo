@@ -5,6 +5,7 @@ import com.me.webflux.repository.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -26,5 +27,13 @@ public class CustomerService {
         long end = System.currentTimeMillis();
         log.info("Total execution time: {}", end - start);
         return customers;
+    }
+
+    public Flux<Customer> loadAllCustomersStream() {
+        long start = System.currentTimeMillis();
+        Flux<Customer> customerFlux = customerRepository.getCustomersStream();
+        long end = System.currentTimeMillis();
+        log.info("Total execution time: {}", end - start);
+        return customerFlux;
     }
 }
