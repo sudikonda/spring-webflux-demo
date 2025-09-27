@@ -25,4 +25,18 @@ public class CustomerHandler {
         Flux<Customer> customers = customerRepository.getCustomersWithoutDelay();
         return ServerResponse.ok().body(customers, Customer.class);
     }
+
+    public Mono<ServerResponse> findCustomerById(ServerRequest serverRequest) {
+        log.info("find customer by Id request: {}", serverRequest);
+        String input = serverRequest.pathVariable("input");
+        int customerId = Integer.parseInt(input);
+        Mono<Customer> customerMono = customerRepository.getCustomersWithoutDelay().filter(c -> c.id() == customerId).next();
+        return ServerResponse.ok().body(customerMono, Customer.class);
+    }
+
+    public Mono<ServerResponse> saveCustomer(ServerRequest serverRequest) {
+        Mono<Customer> customerMono = serverRequest.bodyToMono(Customer.class);
+        Mono<String> saveResponse = customerMono.map(customer -> customer.id() + " : " + customer.name());
+        return ServerResponse.ok().body(saveResponse, String.class);
+    }
 }
