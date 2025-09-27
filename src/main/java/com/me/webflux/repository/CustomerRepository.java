@@ -26,6 +26,12 @@ public class CustomerRepository {
                 .map(i -> new Customer(i, "customer" + i));
     }
 
+    public Flux<Customer> getCustomersWithoutDelay() {
+        return Flux.range(1, 10)
+                .doOnNext(i -> System.out.println("processing count in stream flow: " + i))
+                .map(i -> new Customer(i, "customer" + i));
+    }
+
     private static void sleepExecutionSimulator(int i) {
         try {
             Thread.sleep(1000);
